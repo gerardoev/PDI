@@ -39,7 +39,6 @@ public class AbrirImagen extends javax.swing.JFrame {
     private void initComponents() {
 
         jLabel2 = new javax.swing.JLabel();
-        jButton1 = new javax.swing.JButton();
         label1 = new java.awt.Label();
         jButton2 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
@@ -49,18 +48,15 @@ public class AbrirImagen extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        jMenuItem1 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
 
         jLabel2.setText("jLabel2");
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setPreferredSize(new java.awt.Dimension(900, 600));
-
-        jButton1.setText("Seleccionar imagen");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
 
         label1.setFont(new java.awt.Font("Dialog", 1, 18)); // NOI18N
         label1.setText("Visualizador de imágenes");
@@ -74,7 +70,7 @@ public class AbrirImagen extends javax.swing.JFrame {
 
         jLabel1.setText("Nombre del archivo:");
 
-        jButton3.setText("Test");
+        jButton3.setText("Histogramas");
         jButton3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jButton3ActionPerformed(evt);
@@ -85,6 +81,23 @@ public class AbrirImagen extends javax.swing.JFrame {
 
         jLabel6.setText("Ancho:");
 
+        jMenu1.setText("Archivo");
+
+        jMenuItem1.setText("Seleccionar Imagen");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        jMenu1.add(jMenuItem1);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -94,14 +107,7 @@ public class AbrirImagen extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(label1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton1)
-                        .addGap(87, 87, 87)
-                        .addComponent(jButton3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 132, Short.MAX_VALUE)
-                        .addComponent(jButton2)
-                        .addGap(102, 102, 102))
+                        .addContainerGap(393, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -112,7 +118,13 @@ public class AbrirImagen extends javax.swing.JFrame {
                             .addComponent(jLabel7)
                             .addComponent(jLabel3)
                             .addComponent(jLabel5))
-                        .addGap(0, 0, Short.MAX_VALUE))))
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton3)
+                        .addGap(31, 31, 31)
+                        .addComponent(jButton2)
+                        .addGap(32, 32, 32))))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -131,9 +143,8 @@ public class AbrirImagen extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel6)
                     .addComponent(jLabel7))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 92, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
                     .addComponent(jButton2)
                     .addComponent(jButton3))
                 .addGap(31, 31, 31))
@@ -144,25 +155,6 @@ public class AbrirImagen extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        // TODO add your handling code here:
-        
-        ImagePicker i_picker = new ImagePicker();
-        archivo = i_picker.getArchivo();
-        if(archivo != null){
-            jLabel3.setText(archivo.getName());
-            try {
-                img = ImageIO.read(archivo);
-                this.ImgAltura = img.getHeight();
-                this.ImgAncho = img.getWidth();
-                this.jLabel5.setText(this.ImgAltura+"");
-                this.jLabel7.setText(this.ImgAncho+"");
-            } catch (IOException e) {
-                System.out.println("Error al convertir el archivo a iágen:"+e.getLocalizedMessage());
-            }
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         // TODO add your handling code here:
@@ -178,6 +170,24 @@ public class AbrirImagen extends javax.swing.JFrame {
         // TODO add your handling code here:
         generaHistogramas();
     }//GEN-LAST:event_jButton3ActionPerformed
+
+    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
+        // TODO add your handling code here:
+        ImagePicker i_picker = new ImagePicker();
+        archivo = i_picker.getArchivo();
+        if(archivo != null){
+            jLabel3.setText(archivo.getName());
+            try {
+                img = ImageIO.read(archivo);
+                this.ImgAltura = img.getHeight();
+                this.ImgAncho = img.getWidth();
+                this.jLabel5.setText(this.ImgAltura+"");
+                this.jLabel7.setText(this.ImgAncho+"");
+            } catch (IOException e) {
+                System.out.println("Error al convertir el archivo a iágen:"+e.getLocalizedMessage());
+            }
+        }
+    }//GEN-LAST:event_jMenuItem1ActionPerformed
 
     private int getRed(int rgb){
         return (rgb>>16)&0x0ff;
@@ -239,7 +249,6 @@ public class AbrirImagen extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
@@ -249,6 +258,10 @@ public class AbrirImagen extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem1;
     private java.awt.Label label1;
     // End of variables declaration//GEN-END:variables
 }
