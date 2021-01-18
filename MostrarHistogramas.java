@@ -25,6 +25,11 @@ public class MostrarHistogramas extends javax.swing.JFrame {
         //this.setContentPane(red);
         //this.setContentPane(blue);
     }
+    public MostrarHistogramas(Plot2DPanel grays) {
+        initComponents();
+        this.setLayout(new BoxLayout(getContentPane(),BoxLayout.Y_AXIS));
+        this.add(grays);
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

@@ -5,11 +5,12 @@
  */
 package pdi_practica1;
 import java.awt.Color;
+import java.awt.color.ColorSpace;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.Random;
 import javax.imageio.ImageIO;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import org.math.plot.Plot2DPanel;
 
@@ -21,6 +22,7 @@ public class AbrirImagen extends javax.swing.JFrame {
     private File archivo;
     private BufferedImage img;
     private int ImgAltura, ImgAncho;
+    private int formatoColor;
     
     /**
      * Creates new form AbrirImagen
@@ -48,6 +50,7 @@ public class AbrirImagen extends javax.swing.JFrame {
         jLabel5 = new javax.swing.JLabel();
         jLabel6 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
+        jButton1 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
@@ -80,6 +83,13 @@ public class AbrirImagen extends javax.swing.JFrame {
         jLabel4.setText("Alto:");
 
         jLabel6.setText("Ancho:");
+
+        jButton1.setText("test");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jMenu1.setText("Archivo");
 
@@ -120,6 +130,7 @@ public class AbrirImagen extends javax.swing.JFrame {
                             .addComponent(jLabel5))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(jButton1)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jButton3)
                         .addGap(31, 31, 31)
@@ -146,7 +157,8 @@ public class AbrirImagen extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 66, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jButton2)
-                    .addComponent(jButton3))
+                    .addComponent(jButton3)
+                    .addComponent(jButton1))
                 .addGap(31, 31, 31))
         );
 
@@ -162,17 +174,26 @@ public class AbrirImagen extends javax.swing.JFrame {
             MostrarImagen miv = new MostrarImagen(img);
             miv.setVisible(true);
         }else {
-            JOptionPane.showMessageDialog(null, "No ha cargado ninguna imagen");
+            JOptionPane.showMessageDialog(null, "No ha cargado ninguna imágen");
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        // TODO add your handling code here:
-        generaHistogramas();
+        // BOTON HISTOGRAMAS
+        if(archivo != null){
+            if(revisarEscalaGrises() || formatoColor == ColorSpace.CS_GRAY){
+                muestraHistogramaGray();
+            }else{
+                generaHistogramas();
+            }
+        }else{
+            JOptionPane.showMessageDialog(null, "No ha cargado ninguna imágen");
+        }
     }//GEN-LAST:event_jButton3ActionPerformed
 
     private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        // TODO add your handling code here:
+        // BOTON SELECCIONAR IMAGEN (EN EL MENU)
+        
         ImagePicker i_picker = new ImagePicker();
         archivo = i_picker.getArchivo();
         if(archivo != null){
@@ -183,11 +204,21 @@ public class AbrirImagen extends javax.swing.JFrame {
                 this.ImgAncho = img.getWidth();
                 this.jLabel5.setText(this.ImgAltura+"");
                 this.jLabel7.setText(this.ImgAncho+"");
+                formatoColor = img.getColorModel().getColorSpace().getType();
             } catch (IOException e) {
                 System.out.println("Error al convertir el archivo a iágen:"+e.getLocalizedMessage());
             }
         }
     }//GEN-LAST:event_jMenuItem1ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // BOTON TEST
+        if(revisarEscalaGrises()){
+            System.out.println("Escala de grises");
+        }else{
+            System.out.println("No es escala de grises");
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     private int getRed(int rgb){
         return (rgb>>16)&0x0ff;
@@ -199,6 +230,45 @@ public class AbrirImagen extends javax.swing.JFrame {
     
     private int getBlue(int rgb){
         return (rgb)    &0x0ff;
+    }
+    
+    private boolean revisarEscalaGrises(){
+        Random r = new Random();
+        int rgb = img.getRGB(0, 0);
+        int red = getRed(rgb);
+        int green = getGreen(rgb);
+        int blue = getBlue(rgb);
+        if(red == green && red == blue){
+            rgb = img.getRGB(r.nextInt(this.ImgAncho), r.nextInt(this.ImgAltura));
+            red = getRed(rgb);
+            green = getGreen(rgb);
+            blue = getBlue(rgb);
+            return red == green && red == blue;
+        }else{
+            return false;
+        }
+    }
+    
+    private void muestraHistogramaGray(){
+        double x[] = new double[256];
+        double frecuencias[] = new double[256];
+        Plot2DPanel hist = new Plot2DPanel();
+        
+        hist.setFixedBounds(0, 0, 255);
+        
+        getFrecuencias(frecuencias);
+        //Generamos la matriz que servirá de entrada a la libreria de graficación
+        for(int i = 0; i< 256; i++){
+            x[i] = i;
+        }
+        
+        hist.addBarPlot("Hist Red",Color.BLACK, x, frecuencias);
+        
+        //JFrame frame = new JFrame();
+        //frame.setContentPane(histBlue);
+        //frame.setVisible(true);
+        MostrarHistogramas mh = new MostrarHistogramas(hist);
+        mh.setVisible(true);
     }
     
     private void generaHistogramas(){
@@ -247,8 +317,22 @@ public class AbrirImagen extends javax.swing.JFrame {
             }
         }
     }
+    
+    private void getFrecuencias(double frecuencias[]){
+        
+        //Inicializar en 0's
+        for (int i = 0; i< 256; i++){
+            frecuencias[i]=0;
+        }
+        for(int i = 0; i < this.ImgAltura; i++){
+            for (int j = 0; j < this.ImgAncho; j++){
+                frecuencias[getRed(img.getRGB(j, i))] += 1;
+            }
+        }
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
