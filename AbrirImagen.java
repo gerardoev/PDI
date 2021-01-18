@@ -23,6 +23,7 @@ public class AbrirImagen extends javax.swing.JFrame {
     private BufferedImage img;
     private int ImgAltura, ImgAncho;
     private int formatoColor;
+    private int numPixeles;
     
     /**
      * Creates new form AbrirImagen
@@ -205,6 +206,7 @@ public class AbrirImagen extends javax.swing.JFrame {
                 this.jLabel5.setText(this.ImgAltura+"");
                 this.jLabel7.setText(this.ImgAncho+"");
                 formatoColor = img.getColorModel().getColorSpace().getType();
+                numPixeles = ImgAltura * ImgAncho;
             } catch (IOException e) {
                 System.out.println("Error al convertir el archivo a iágen:"+e.getLocalizedMessage());
             }
@@ -262,7 +264,7 @@ public class AbrirImagen extends javax.swing.JFrame {
             x[i] = i;
         }
         
-        hist.addBarPlot("Hist Red",Color.BLACK, x, frecuencias);
+        hist.addBarPlot("Hist Red",Color.BLACK, x, normalizar(frecuencias,256,numPixeles));
         
         //JFrame frame = new JFrame();
         //frame.setContentPane(histBlue);
@@ -290,9 +292,9 @@ public class AbrirImagen extends javax.swing.JFrame {
             x[i] = i;
         }
         
-        histRed.addBarPlot("Hist Red",Color.RED, x, frecuenciasRed);
-        histBlue.addBarPlot("Hist Blue",Color.BLUE, x, frecuenciasBlue);
-        histGreen.addBarPlot("Histograma Green", Color.GREEN, x, frecuenciasGreen);
+        histRed.addBarPlot("Hist Red",Color.RED, x, normalizar(frecuenciasRed,256,numPixeles));
+        histBlue.addBarPlot("Hist Blue",Color.BLUE, x, normalizar(frecuenciasBlue,256,numPixeles));
+        histGreen.addBarPlot("Histograma Green", Color.GREEN, x, normalizar(frecuenciasGreen,256,numPixeles));
         
         //JFrame frame = new JFrame();
         //frame.setContentPane(histBlue);
@@ -329,6 +331,14 @@ public class AbrirImagen extends javax.swing.JFrame {
                 frecuencias[getRed(img.getRGB(j, i))] += 1;
             }
         }
+    }
+    
+    private double[] normalizar(double frecuencias[], int tamanio, int total){
+        double frecNormalizadas[] = new double[tamanio];
+        for(int i=0; i< tamanio; i++){
+            frecNormalizadas[i] = frecuencias[i]/total;
+        }
+        return frecNormalizadas;
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
