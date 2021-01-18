@@ -43,6 +43,7 @@ public class ImagePicker extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
+        jFileChooser3.setCurrentDirectory(new java.io.File("C:\\Users\\gerar\\Pictures\\imagenesPDI"));
         jFileChooser3.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 jFileChooser3ActionPerformed(evt);
@@ -71,7 +72,7 @@ public class ImagePicker extends javax.swing.JFrame {
         // TODO add your handling code here:
         if(evt.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)){
             archivo = jFileChooser3.getSelectedFile();
-            if(!(archivo.getName().endsWith(".jpg") || archivo.getName().endsWith(".bmp"))){
+            if(!(archivo.getName().endsWith(".jpg") || archivo.getName().endsWith(".bmp") || archivo.getName().endsWith(".jpeg"))){
                 JOptionPane.showMessageDialog(null, "Formato de archivo no válido");
                 archivo = null;
             }
